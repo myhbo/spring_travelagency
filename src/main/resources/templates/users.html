@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+>
+<head>
+    <meta charset="UTF-8">
+    <title>All users</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
+<body>
+<nav th:replace="~{navbar}"></nav>
+<div class="container">
+    <table th:unless="${users.isEmpty()}" class="table table-striped">
+        <thead>
+        <tr>
+            <th th:text="#{users.id}"></th>
+            <th th:text="#{users.email}"></th>
+            <th th:text="#{users.full_name}"></th>
+            <th th:text="#{users.role}" class="text-center"></th>
+            <th th:text="#{users.update}" class="text-center"></th>
+            <th th:text="#{users.status}" class="text-center"></th>
+        </tr>
+        </thead>
+        <tbody>
+
+        <tr th:each="user : ${users}">
+            <td class="" th:text="${user.id}"></td>
+            <td class="" th:text="${user.email}"></td>
+            <td class="" th:text="${user.fullName}"></td>
+            <td class="" th:text="${user.role}"></td>
+            <td class="text-center">
+                <a th:href="@{/users/update/{id}(id=${user.id})}" th:text="#{users.update}" class="btn btn-primary"></a>
+            </td>
+            <td class="text-center">
+                <a th:href="@{/users/ban/{id}(id=${user.id})}"
+                   class="btn btn-danger btn-block" th:if="${user.isEnabled()}"
+                   th:text="#{users.status.ban}"></a>
+                <a th:href="@{/users/unban/{id}(id=${user.id})}"
+                   class="btn btn-success btn-block" th:unless="${user.isEnabled()}"
+                   th:text="#{users.status.unban}"></a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+</body>
+</html>

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Update user</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
+<body>
+<nav th:replace="~{navbar}"></nav>
+<style>
+    .container-fluid {
+        max-width: 220px;
+        margin: auto;
+    }
+    .col-form-label {
+        text-align: center;
+    }
+
+</style>
+<div class="container-fluid">
+    <div>
+        <h2 th:text="#{users.update.title}"></h2>
+        <hr>
+    </div>
+        <div>
+            <form action="#" th:action="@{/users/update/{id}(id=${user.id})}" th:object="${user}" method="post">
+
+                    <div>
+                        <span class="col-form-label" for="username" th:text="#{users.update.email.label}"></span>
+                            <input type="text"
+                                   th:field="*{email}"
+                                   th:placeholder="#{users.update.email.placeholder}"
+                                   class="form-control"/>
+
+                    </div>
+                    <div>
+                        <label>
+                        <span class="col-form-label" for="password" th:text="#{users.update.password.label}"></span>
+                        <input class="form-control" id="password" name="password" type="password"
+                               th:placeholder="#{users.update.password.placeholder}">
+                        </label>
+                    </div>
+
+                    <div>
+                        <label>
+                            <span th:text="#{users.update.full_name.label}"></span>
+                            <input type="text"
+                                   th:field="*{fullName}"
+                                   th:placeholder="#{users.update.full_name.placeholder}"
+                                   class="form-control"/>
+                        </label>
+                    </div>
+                    <div>
+                        <ul>
+                            <li th:each="role : ${roles}">
+                                <input type="checkbox" class="form-check-input check" th:field="*{role}"
+                                       th:value="${role}"/>
+                                <label th:for="${#ids.prev('role')}" class="form-check-label"
+                                       th:text="${role}"></label>
+                            </li>
+                        </ul>
+                    </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <input class="btn btn-primary" th:value="#{users.update.button.submit}" type="submit">
+                    </div>
+                </div>
+            </form>
+        </div>
+</div>
+
+
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script>
+    $(document).ready(function(){
+        $('.check').click(function() {
+            $('.check').not(this).prop('checked', false);
+        });
+    });
+</script>
+</body>
+</html>
