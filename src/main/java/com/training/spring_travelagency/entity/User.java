@@ -6,11 +6,10 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-
 import javax.persistence.*;
-
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 
 @Data
@@ -20,7 +19,8 @@ import java.util.Collections;
 @Getter
 @Setter
 @Entity
-@ToString
+@ToString(exclude = {"orders"})
+@EqualsAndHashCode(exclude = {"orders"})
 @Table(name = "users")
 public class User implements UserDetails {
 
@@ -37,12 +37,15 @@ public class User implements UserDetails {
     @Column(name = "fullname", nullable = false)
     private String fullName;
 
-    @Column(name = "role")
+    @Column(name = "role", nullable = false)
     @Enumerated(EnumType.STRING)
     private Roles role;
 
     @Column(name = "enabled")
     private boolean enabled;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Order> orders;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

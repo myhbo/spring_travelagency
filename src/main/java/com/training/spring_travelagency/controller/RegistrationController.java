@@ -8,6 +8,8 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 
 @Controller
 @RequestMapping("/registration")
@@ -24,20 +26,20 @@ public class RegistrationController {
     }
 
     @PostMapping
-    public String registerNewUser(@ModelAttribute("user") NewUserDTO userDTO,
+    public String registerNewUser(@ModelAttribute("user") @Valid NewUserDTO userDTO,
                                   BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return "registration";
+            return "/registration";
         }
         userService.createUser(userDTO);
         return "redirect:/login";
     }
 
     @ExceptionHandler(EmailNotUniqueException.class)
-    public String handleRuntimeException(EmailNotUniqueException e,
+    public String handleEmailNotUniqueException(EmailNotUniqueException e,
                                          Model model) {
         model.addAttribute("user", new NewUserDTO());
-        model.addAttribute("emailErrorMessage", e.getMessage());
-        return "registration";
+        model.addAttribute("usernameErrorMessage", e.getMessage());
+        return "/registration";
     }
 }

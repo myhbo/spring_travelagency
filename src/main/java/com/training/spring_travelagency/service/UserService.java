@@ -4,18 +4,22 @@ import com.training.spring_travelagency.dto.NewUserDTO;
 import com.training.spring_travelagency.dto.UserDTO;
 import com.training.spring_travelagency.entity.User;
 import com.training.spring_travelagency.entity.enums.Roles;
+import com.training.spring_travelagency.exception.EmailNotUniqueException;
 import com.training.spring_travelagency.repository.UserRepository;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Isolation;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import javax.transaction.Transactional;
+import javax.validation.ConstraintViolationException;
 import java.util.Objects;
 
 
@@ -35,13 +39,13 @@ public class UserService implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
-        return userRepository.findByEmail(s)
-                .orElseThrow(() -> new UsernameNotFoundException(s));
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException(email));
     }
 
-    public List<User> findAllUsers() {
-        return userRepository.findAll();
+    public Page<User> findAllUsersPageable(Pageable pageable) {
+        return userRepository.findAll(pageable);
     }
 
     public void createUser(NewUserDTO userDTO) {
@@ -56,11 +60,17 @@ public class UserService implements UserDetailsService {
         try {
             userRepository.save(user);
             log.info("New user " + user);
-        } catch (Exception e) {
+        } catch (DataIntegrityViolationException e) {
             log.error("Email not unique: " + userDTO.getEmail());
+            throw new EmailNotUniqueException(messageSource.getMessage(
+                    "registration.email.not.unique",
+                    null,
+                    LocaleContextHolder.getLocale()) + userDTO.getEmail(), e);
+
         }
     }
 
+    @Transactional
     public void updateUser(long id, UserDTO userDTO) {
         User user = getUserById(id);
         user.setEmail(userDTO.getEmail());
@@ -74,15 +84,16 @@ public class UserService implements UserDetailsService {
             userRepository.save(user);
             log.info("Updated user " + user);
         } catch (Exception e) {
-            log.error("Email not unique: " + userDTO.getEmail());
+            log.error("Already registered: " + userDTO.getEmail());
         }
     }
 
     public User getUserById(long id) {
         return userRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid user id: " + id));
+                .orElseThrow(() -> new IllegalArgumentException("User with id: " + id + " doesnt exist"));
     }
 
+    @Transactional
     public void banUser(long id) {
         User user = getUserById(id);
         user.setEnabled(false);
@@ -90,6 +101,7 @@ public class UserService implements UserDetailsService {
         log.info("Banned user " + user);
     }
 
+    @Transactional
     public void unbanUser(long id) {
         User user = getUserById(id);
         user.setEnabled(true);

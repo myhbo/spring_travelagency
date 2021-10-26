@@ -10,7 +10,7 @@
 <body>
 <nav th:replace="~{navbar}"></nav>
 
-<form class="form-signin container"   th:action="@{/login}" method="post">
+<form style="width: 550px" class="form-signin container"   th:action="@{/login}" method="post">
   <h1 th:text="#{login.header}" class="h3 mb-3 font-weight-normal" ></h1>
   <div th:if="${logout}" class="alert alert-success alert-dismissible fade show" role="alert">
     <span th:text="#{login.logout.success}"></span>
@@ -18,23 +18,27 @@
       <span aria-hidden="true">&times;</span>
     </button>
   </div>
-  <label id="usernameLabel" for="username" class="sr-only" th:text="#{login.label.email}"></label>
+  <label for="username" class="sr-only" th:text="#{login.label.email}"></label>
   <input type="text"
          id="username"
          name="username"
          class="form-control"
          th:placeholder="#{login.label.email.placeholder}"
          required
-         autofocus
-  >
-  <label id="passwordLabel" for="password" class="sr-only" th:text="#{login.label.password}"></label>
+         autofocus>
+  <label for="password" class="sr-only" th:text="#{login.label.password}"></label>
   <input type="password"
          name="password"
          id="password"
          th:placeholder="#{login.input.password.placeholder}"
          required
-         class="form-control"
-  >
+         class="form-control">
+  <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+    <span th:text="#{login.invalid}"></span>
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
   <button class="btn btn-lg btn-primary btn-block" type="submit" th:text="#{button.sign_in}"></button>
 </form>
 

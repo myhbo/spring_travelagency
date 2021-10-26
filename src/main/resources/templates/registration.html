@@ -10,47 +10,65 @@
 <body>
 <nav th:replace="~{navbar}"></nav>
 
-<div class="container">
+<style>
+  .container-fluid {
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    align-self: stretch;
+  }
+</style>
+
+<div class="container-fluid">
   <div>
-    <h1 class="display-5" th:text="#{registration.header}"></h1>
+    <div class="row" style="justify-content: center">
+      <h1 th:text="#{registration.header}"></h1>
+    </div>
     <hr>
-  </div>
-  <div>
-    <form th:action="@{/registration}" th:object="${user}" method="post">
-      <div class="form-row">
-        <div class="col-md-4 mb-4">
+    <div>
+      <form th:action="@{/registration}" th:object="${user}" method="post">
+
+        <div>
           <label>
             <span th:text="#{registration.email.label}"></span>
             <input type="text"
                    th:field="*{email}"
                    th:placeholder="#{registration.email.placeholder}"
                    class="form-control"/>
+            <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}"
+                  class="text-danger"></span>
           </label>
         </div>
-        <div class="col-md-4 mb-4">
+        <div>
           <label>
             <span th:text="#{registration.password.label}"></span>
             <input type="password"
                    th:field="*{password}"
                    th:placeholder="#{registration.password.placeholder}"
                    class="form-control"/>
-          </label>
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="col-md-4 mb-4">
-          <label>
-            <span th:text="#{registration.full_name.label}"></span>
-            <input type="text"
-                   th:field="*{fullName}"
-                   th:placeholder="#{registration.full_name.placeholder}"
-                   class="form-control"/>
+            <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}"
+                  class="text-danger"></span>
           </label>
         </div>
 
-      </div>
-      <button type="submit" class="btn btn-primary" th:text="#{button.sign_up}">Sign up</button>
-    </form>
+
+        <div>
+          <label>
+            <span th:text="#{registration.fullname.label}"></span>
+            <input type="text"
+                   th:field="*{fullName}"
+                   th:placeholder="#{registration.fullname.placeholder}"
+                   class="form-control"/>
+            <span th:if="${#fields.hasErrors('fullName')}" th:errors="*{fullName}"
+                  class="text-danger"></span>
+          </label>
+        </div>
+
+        <div class="row" style="justify-content: center">
+          <button type="submit" class="btn btn-primary" style="margin-top: 20px" th:text="#{button.sign_up}"></button>
+        </div>
+      </form>
+    </div>
   </div>
 
 </body>

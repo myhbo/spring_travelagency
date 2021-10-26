@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <meta charset="UTF-8">
+    <title>All users</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
+<body>
+<nav th:replace="~{navbar}"></nav>
+
+<div class="container">
+    <div class="row" style="justify-content: center">
+        <div th:if="${orders.isEmpty()}">
+            <h1 class="display-5" th:text="#{orders.empty}"></h1>
+        </div>
+        <div th:unless="${orders.isEmpty()}">
+            <h1 class="display-5" th:text="#{orders.header}"></h1>
+        </div>
+    </div>
+
+
+    <table th:unless="${orders.isEmpty()}" class="table">
+        <thead>
+        <tr>
+            <th th:include="~{column-sort.html::column-sort(url='/orders',page=${orders},column='id',column_text=#{orders.id})}"></th>
+            <th th:include="~{column-sort.html::column-sort(url='/orders',page=${orders},column='tour',column_text=#{orders.tour})}"></th>
+            <th th:include="~{column-sort.html::column-sort(url='/orders',page=${orders},column='user',column_text=#{orders.user})}"></th>
+            <th th:include="~{column-sort.html::column-sort(url='/orders',page=${orders},column='price',column_text=#{orders.price})}"></th>
+            <th th:include="~{column-sort.html::column-sort(url='/orders',page=${orders},column='discount',column_text=#{orders.discount})}"></th>
+            <th th:text="#{orders.set.discount}" class="text-center"></th>
+            <th th:include="~{column-sort.html::column-sort(url='/orders',page=${orders},column='status',column_text=#{orders.status})}" class="text-center"></th>
+            <th th:text="#{tours.manage}" class="text-center"></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="order : ${orders}">
+            <td><span th:text="${order.id}"></span></td>
+            <td><span th:text="${order.tour.name}"></span></td>
+            <td><span th:text="${order.user.username}"></span></td>
+            <td><span th:text="${#numbers.formatDecimal(order.price,1,1)}"></span></td>
+            <td><span th:text="${#numbers.formatDecimal(order.discount,1,1)}"></span></td>
+            <td>
+                <a class="btn btn-primary"
+                   sec:authorize="hasAnyAuthority('ADMIN', 'MANAGER')"
+                   th:if=${order.isProcessing()}
+                   th:href="@{/orders/set-discount/{id}(id=${order.id})}"
+                   th:text="#{orders.button.set}">
+                </a>
+            </td>
+            <td class="text-center" style="width: 15%">
+                <button class="btn btn-info active btn-block" th:if="${order.isProcessing()}"
+                        th:text="#{orders.processing}"></button>
+                <button class="btn btn-success active btn-block" th:if="${order.isConfirmed()}"
+                        th:text="#{orders.confirmed}"></button>
+                <button class="btn btn-danger active btn-block" th:if="${order.isRejected()}"
+                        th:text="#{orders.rejected}"></button>
+            </td>
+
+            <td>
+                <div class="row" style="justify-content: center" th:unless="${!order.isProcessing()}">
+                    <a class="btn btn-success"
+                       th:href="@{/orders/set-confirmed/{id}(id=${order.id},page=${orders.number},size=${orders.size},sort=${orders.sort.toString().replaceAll(': ',',')})}"
+                       th:text="#{orders.status.button.mark.confirmed}">
+                    </a>
+                    <a class="btn btn-danger"
+                       th:href="@{/orders/set-rejected/{id}(id=${order.id},page=${orders.number},size=${orders.size},sort=${orders.sort.toString().replaceAll(': ',',')})}"
+                       th:text="#{orders.status.button.mark.rejected}">
+                    </a>
+                </div>
+
+            </td>
+
+        </tr>
+        </tbody>
+    </table>
+</div>
+<div style="justify-content: center"
+     th:include="~{pager.html::pager(url='/orders',page=${orders})}">
+</div>
+
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+</body>
+</html>

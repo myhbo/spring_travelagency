@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <meta charset="UTF-8">
+    <title>All tours</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
+<body>
+<nav th:replace="~{navbar}"></nav>
+
+<div class="container">
+
+    <div class="row" style="justify-content: center">
+        <div th:if="${tours.isEmpty()}">
+            <h1 th:text="#{tours.empty}"></h1>
+        </div>
+        <div th:unless="${tours.isEmpty()}">
+            <h1 th:text="#{tours.header}"></h1>
+        </div>
+    </div>
+
+    <div class="row" style="justify-content: center; margin-bottom: 20px">
+
+        <a sec:authorize="hasAuthority('ADMIN')"
+           th:href="@{/tours/add}"
+           class="btn btn-primary"
+           th:text="#{tours.button.add}" type="submit">
+        </a>
+
+    </div>
+    <table th:unless="${tours.isEmpty()}" class="table">
+        <thead>
+        <tr>
+            <div sec:authorize="hasAnyAuthority('ADMIN', 'MANAGER')">
+                <th th:include="~{column-sort.html::column-sort(url='/tours',page=${tours},column='id',column_text=#{tours.id})}"></th>
+            </div>
+            <th th:include="~{column-sort.html::column-sort(url='/tours',page=${tours},column='name',column_text=#{tours.name})}"></th>
+            <th th:include="~{column-sort.html::column-sort(url='/tours',page=${tours},column='type',column_text=#{tours.tourtype})}"></th>
+            <th th:include="~{column-sort.html::column-sort(url='/tours',page=${tours},column='price',column_text=#{tours.price})}"></th>
+            <th th:include="~{column-sort.html::column-sort(url='/tours',page=${tours},column='groupSize',column_text=#{tours.groupsize})}"></th>
+            <th th:include="~{column-sort.html::column-sort(url='/tours',page=${tours},column='hotelType',column_text=#{tours.hoteltype})}"></th>
+            <th th:include="~{column-sort.html::column-sort(url='/tours',page=${tours},column='isHot',column_text=#{tours.ishot})}"></th>
+            <div sec:authorize="hasAnyAuthority('ADMIN', 'MANAGER')">
+                <th th:text="#{tours.manage}"></th>
+            </div>
+            <div sec:authorize="isAuthenticated()">
+                <th th:text="#{tours.order}"></th>
+            </div>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="tour : ${tours}">
+            <td sec:authorize="hasAnyAuthority('ADMIN', 'MANAGER')">
+                <span th:text="${tour.id}"></span>
+            </td>
+            <td><span th:text="${tour.name}"></span></td>
+            <td><span th:text="${tour.getTourType}"></span></td>
+            <td><span th:text="${#numbers.formatDecimal(tour.price,1,1)}"></span></td>
+            <td><span th:text="${tour.groupSize}"></span></td>
+            <td><span th:text="${tour.hotelType}"></span></td>
+            <td>
+                <span th:if="${tour.isHot()}" th:text="#{tours.hot}"></span>
+                <span th:unless="${tour.isHot()}" th:text="#{tours.default}"></span>
+            </td>
+            <td sec:authorize="hasAnyAuthority('ADMIN','MANAGER')">
+                <a th:href="@{/tours/toggle-hot/{id}(id=${tour.id},page=${tours.number},size=${tours.size},sort=${tours.sort.toString().replaceAll(': ',',')})}" class="btn btn-primary">
+                    <span th:text="#{tours.togglehot.button}"></span>
+                </a>
+                <a class="btn btn-warning"
+                   sec:authorize="hasAuthority('ADMIN')"
+                   th:href="@{/tours/update/{id}(id=${tour.id})}"
+                   th:text="#{tours.button.update}">
+                </a>
+                <a class="btn btn-danger"
+                   sec:authorize="hasAuthority('ADMIN')"
+                   th:href="@{/tours/delete/{id}(id=${tour.id},page=${tours.number},size=${tours.size},sort=${tours.sort.toString().replaceAll(': ',',')})}"
+                   th:text="#{tours.button.delete}">
+                </a>
+            </td>
+            <td>
+                <a class="btn btn-primary"
+                   sec:authorize="isAuthenticated()"
+                   th:href="@{/orders/add/{id}(id=${tour.id},page=${tours.number},size=${tours.size},sort=${tours.sort.toString().replaceAll(': ',',')})}"
+                   th:text="#{tours.button.order}">
+                </a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<div th:include="~{pager.html::pager(url='/tours',page=${tours})}">
+</div>
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+</body>
+</html>

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+>
+<head>
+    <meta charset="UTF-8">
+    <title>Add new tour</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
+<body>
+<nav th:replace="~{navbar}"></nav>
+<style>
+    .container-fluid {
+        align-items: center;
+        justify-content: center;
+        display: flex;
+        align-self: stretch;
+    }
+</style>
+<div class="container-fluid">
+    <div>
+        <div class="row" style="justify-content: center">
+            <h1 class="display-4" th:text="#{tours.update.title}"></h1>
+        </div>
+        <hr>
+
+
+        <form method="post" th:action="@{/tours/update/{id}(id=${tour.id})}" th:object="${tour}">
+
+            <div>
+                <label for="name" th:text="#{tours.update.name.label}"></label>
+                <input class="form-control" id="name" th:field="*{name}"
+                       th:placeholder="#{tours.update.name.placeholder}" type="text"
+                       required/>
+                <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}"
+                      class="text-danger"></span>
+            </div>
+            <div>
+                <label for="price" th:text="#{tours.update.price.label}"></label>
+                <input class="form-control" id="price" th:field="*{price}"
+                       th:placeholder="#{tours.update.price.placeholder}" type="text"
+                       required/>
+                <span th:if="${#fields.hasErrors('price')}" th:errors="*{price}"
+                      class="text-danger"></span>
+            </div>
+            <div>
+                <label for="groupSize" th:text="#{tours.update.groupsize.label}"></label>
+                <input class="form-control" id="groupSize" th:field="*{groupSize}"
+                       th:placeholder="#{tours.update.groupsize.label}" type="text"
+                       required/>
+                <span th:if="${#fields.hasErrors('groupSize')}" th:errors="*{groupSize}"
+                      class="text-danger"></span>
+            </div>
+            <div>
+                <div>
+                    <label for="tourType"
+                           th:text="#{tours.update.type.label}">
+                    </label>
+                    <select th:field="*{tourType}" class="form-control" id="tourType">
+                        <option th:each="tourType : ${tourTypes}"
+                                th:text="${tourType}"
+                                th:value="${tourType.name()}">
+                        </option>
+                    </select>
+                </div>
+                <div>
+                    <label for="hotelType"
+                           th:text="#{tours.update.hoteltype.label}">
+                    </label>
+                    <select th:field="*{hotelType}" class="form-control" id="hotelType">
+                        <option th:each="hotelType : ${hotelTypes}"
+                                th:text="${hotelType}"
+                                th:value="${hotelType.name()}">
+                        </option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row" style="justify-content: center; margin-top: 20px">
+                <input class="btn btn-primary" th:value="#{tours.update.button.submit}" type="submit">
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+</body>
+</html>
