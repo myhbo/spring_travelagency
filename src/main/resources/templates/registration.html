@@ -36,7 +36,13 @@
                    th:placeholder="#{registration.email.placeholder}"
                    class="form-control"/>
             <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}"
-                  class="text-danger"></span>
+                  class="text-danger">
+
+            </span>
+            <span th:if="${uniqueErrorMessage}" th:text="${uniqueErrorMessage}"
+                  class="text-danger">
+
+            </span>
           </label>
         </div>
         <div>

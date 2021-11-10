@@ -19,7 +19,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import javax.validation.ConstraintViolationException;
 import java.util.Objects;
 
 
@@ -59,14 +58,14 @@ public class UserService implements UserDetailsService {
                 .build();
         try {
             userRepository.save(user);
-            log.info("New user " + user);
+            log.info("create new user");
             return true;
         } catch (DataIntegrityViolationException e) {
             log.error("Email not unique: " + userDTO.getEmail());
             throw new EmailNotUniqueException(messageSource.getMessage(
                     "registration.email.not.unique",
                     null,
-                    LocaleContextHolder.getLocale()) + userDTO.getEmail(), e);
+                    LocaleContextHolder.getLocale()), e);
         }
 
     }

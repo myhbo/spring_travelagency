@@ -39,7 +39,7 @@ public class RegistrationController {
     public String handleEmailNotUniqueException(EmailNotUniqueException e,
                                          Model model) {
         model.addAttribute("user", new NewUserDTO());
-        model.addAttribute("usernameErrorMessage", e.getMessage());
+        model.addAttribute("uniqueErrorMessage", e.getMessage());
         return "/registration";
     }
 }
