@@ -35,7 +35,7 @@ public class TourService {
                 .isHot(false)
                 .build();
         tourRepository.save(tour);
-        log.info("Added tour " + tour);
+        log.info("Added tour");
     }
 
     @Transactional
@@ -55,7 +55,7 @@ public class TourService {
         tour.setGroupSize(tourDTO.getGroupSize());
         tour.setHotelType(tourDTO.getHotelType());
         tourRepository.save(tour);
-        log.info("Updated tour " + tour);
+        log.info("Updated tour");
     }
 
     @Transactional
@@ -63,14 +63,14 @@ public class TourService {
         Tour tour = getTourById(id);
         tour.changeHot();
         tourRepository.save(tour);
-        log.info("Toggled hot " + tour);
+        log.info("Toggled hot");
     }
 
     @Transactional
     public void deleteTour(Long id) {
         Tour tour = getTourById(id);
         tourRepository.delete(tour);
-        log.info("Deleted tour " + tour);
+        log.info("Deleted tour");
     }
 
     public Tour getTourById(Long id) {

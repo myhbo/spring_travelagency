@@ -2,7 +2,7 @@
 <div class="m-3" th:fragment="pager(url,page)" th:if="${page.totalPages > 0}">
     <div class="row" style="justify-content: center">
         <nav>
-            <ul class="pagination ">
+            <ul class="pagination">
                 <li class="page-item" th:classappend="${page.number == 0} ? 'disabled'">
                     <a class="page-link"
                        th:href="@{${url}(page=${0}, size=${page.size}, sort=${page.sort.toString().replaceAll(': ',',')})}"
@@ -23,7 +23,7 @@
                 <li class="page-item"
                     th:classappend="${i == page.number} ? 'active'"
                     th:each="i : ${#numbers.sequence((page.number < 1 ? page.number : (page.number == 1 ? page.number - 1 : page.number - 2)),
-                                                     (page.number < page.totalPages - 2 ? page.number + 3 : (page.number == page.totalPages - 2 ? page.number + 1 : page.totalPages - 1)))}">
+                                                     (page.number < page.totalPages - 3 ? page.number + 2 : (page.number == page.totalPages - 2 ? page.number + 1 : page.totalPages - 1)))}">
                     <a class="page-link" th:if="${i == page.number}" href="#" th:text="${i + 1}"></a>
                     <a class="page-link" th:unless="${i == page.number}"
                        th:href="@{${url}(page=${i}, size=${page.size}, sort=${page.sort.toString().replaceAll(': ',',')})}"

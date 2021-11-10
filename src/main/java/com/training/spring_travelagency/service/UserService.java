@@ -48,7 +48,7 @@ public class UserService implements UserDetailsService {
         return userRepository.findAll(pageable);
     }
 
-    public void createUser(NewUserDTO userDTO) {
+    public boolean createUser(NewUserDTO userDTO) {
         User user = User
                 .builder()
                 .email(userDTO.getEmail())
@@ -60,14 +60,15 @@ public class UserService implements UserDetailsService {
         try {
             userRepository.save(user);
             log.info("New user " + user);
+            return true;
         } catch (DataIntegrityViolationException e) {
             log.error("Email not unique: " + userDTO.getEmail());
             throw new EmailNotUniqueException(messageSource.getMessage(
                     "registration.email.not.unique",
                     null,
                     LocaleContextHolder.getLocale()) + userDTO.getEmail(), e);
-
         }
+
     }
 
     @Transactional
@@ -90,7 +91,7 @@ public class UserService implements UserDetailsService {
 
     public User getUserById(long id) {
         return userRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("User with id: " + id + " doesnt exist"));
+                .orElseThrow(() -> new IllegalArgumentException("no such user"));
     }
 
     @Transactional

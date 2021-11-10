@@ -38,7 +38,7 @@
                 <th th:include="~{column-sort.html::column-sort(url='/tours',page=${tours},column='id',column_text=#{tours.id})}"></th>
             </div>
             <th th:include="~{column-sort.html::column-sort(url='/tours',page=${tours},column='name',column_text=#{tours.name})}"></th>
-            <th th:include="~{column-sort.html::column-sort(url='/tours',page=${tours},column='type',column_text=#{tours.tourtype})}"></th>
+            <th th:include="~{column-sort.html::column-sort(url='/tours',page=${tours},column='tourType',column_text=#{tours.tourtype})}"></th>
             <th th:include="~{column-sort.html::column-sort(url='/tours',page=${tours},column='price',column_text=#{tours.price})}"></th>
             <th th:include="~{column-sort.html::column-sort(url='/tours',page=${tours},column='groupSize',column_text=#{tours.groupsize})}"></th>
             <th th:include="~{column-sort.html::column-sort(url='/tours',page=${tours},column='hotelType',column_text=#{tours.hoteltype})}"></th>
@@ -57,7 +57,7 @@
                 <span th:text="${tour.id}"></span>
             </td>
             <td><span th:text="${tour.name}"></span></td>
-            <td><span th:text="${tour.getTourType}"></span></td>
+            <td><span th:text="${tour.tourType}"></span></td>
             <td><span th:text="${#numbers.formatDecimal(tour.price,1,1)}"></span></td>
             <td><span th:text="${tour.groupSize}"></span></td>
             <td><span th:text="${tour.hotelType}"></span></td>
