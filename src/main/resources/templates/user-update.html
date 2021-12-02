@@ -59,18 +59,19 @@
                               class="text-danger"></span>
                     </label>
                 </div>
-                <div class="container-fluid" style="justify-content: center">
-                    <ul>
-                        <li th:each="role : ${roles}">
-                            <input type="checkbox" class="form-check-input check" th:field="*{role}"
-                                   th:value="${role}"/>
-                            <label th:for="${#ids.prev('role')}" class="form-check-label"
-                                   th:text="${role}"></label>
-                        </li>
-                    </ul>
+                <div>
+                    <label for="roles"
+                           th:text="#{users.role}">
+                    </label>
+                    <select th:field="*{role}" class="form-control" id="roles">
+                        <option th:each="role : ${roles}"
+                                th:text="${role}"
+                                th:value="${role}">
+                        </option>
+                    </select>
                 </div>
 
-                <div class="row" style="justify-content: center">
+                <div class="row" style="justify-content: center; margin-top: 10px">
 
                     <input class="btn btn-primary" th:value="#{users.update.button.submit}" type="submit">
 
@@ -86,12 +87,5 @@
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
         crossorigin="anonymous"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<script>
-    $(document).ready(function(){
-        $('.check').click(function() {
-            $('.check').not(this).prop('checked', false);
-        });
-    });
-</script>
 </body>
 </html>
